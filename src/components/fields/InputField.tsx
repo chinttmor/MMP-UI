@@ -8,6 +8,7 @@ function InputField(props: {
   state?: string;
   disabled?: boolean;
   type?: string;
+  name?: string;
   onChange?: any;
 }) {
   const {
@@ -19,6 +20,7 @@ function InputField(props: {
     variant,
     state,
     disabled,
+    name,
     onChange,
   } = props;
 
@@ -35,6 +37,7 @@ function InputField(props: {
       <input
         onChange={onChange}
         disabled={disabled}
+        name={name}
         type={type}
         id={id}
         placeholder={placeholder}

@@ -22,9 +22,8 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        console.log(credentials);
         const response = await axios.post(
-          `http://localhost:8000/v1/auth/login`,
+          `${process.env.NEXTAUTH_URL}auth/login`,
           {
             email: credentials?.email,
             password: credentials?.password,

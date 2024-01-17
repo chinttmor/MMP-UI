@@ -5,6 +5,8 @@ import Checkbox from "../../../components/checkbox";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignInDefault() {
   const { push } = useRouter();
@@ -32,11 +34,14 @@ function SignInDefault() {
         password: formData.password,
         redirect: false,
       });
-      console.log(res);
       if (res?.status != 200) {
-        seIsPassInvalid(true);
-        setInvalidUser(true);
-        console.log("Wrong user or password");
+        return toast.error("Wrong email or password", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          theme: "light",
+        });
       } else {
         setIsLogged(true);
       }
@@ -93,9 +98,7 @@ function SignInDefault() {
             id="email"
             type="text"
             name="email"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleChange(e)
-            }
+            onChange={handleChange}
           />
 
           {/* Password */}
@@ -107,9 +110,7 @@ function SignInDefault() {
             id="password"
             type="password"
             name="password"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleChange(e)
-            }
+            onChange={handleChange}
           />
           {/* Checkbox */}
           <div className="mb-4 flex items-center justify-between px-2">

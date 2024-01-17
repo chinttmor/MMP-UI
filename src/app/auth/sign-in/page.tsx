@@ -2,17 +2,13 @@
 import InputField from "../../../components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "../../../components/checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Bounce, ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function SignInDefault() {
   const { push } = useRouter();
-  const [isLogged, setIsLogged] = useState<boolean>(false);
-  const [isPassInvalid, seIsPassInvalid] = useState<boolean>(false);
-  const [invalidUser, setInvalidUser] = useState<boolean>(false);
   const [formData, setFormData] = useState<{ email: string; password: string }>(
     {
       email: "",
@@ -43,29 +39,18 @@ function SignInDefault() {
           theme: "light",
         });
       } else {
-        setIsLogged(true);
+        push("/admin");
       }
     } catch (error) {
-      console.log("signIn had an error", error);
+      return toast.error("Unknow error", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        theme: "light",
+      });
     }
   };
-  useEffect(() => {
-    if (isPassInvalid) {
-      setTimeout(() => {
-        seIsPassInvalid(false);
-      }, 1400);
-    }
-    if (invalidUser) {
-      setTimeout(() => {
-        setInvalidUser(false);
-      }, 1400);
-    }
-    if (isLogged) {
-      setTimeout(() => {
-        push("/admin");
-      }, 1400);
-    }
-  }, [isPassInvalid, invalidUser, isLogged]);
   return (
     <div className="mt-[20vh] py-7 px-16 border-white rounded-2xl border-slate-600 bg-slate-600">
       <div className="flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">

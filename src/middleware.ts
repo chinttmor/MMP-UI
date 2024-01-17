@@ -5,12 +5,6 @@ export function middleware(request: NextRequest) {
   const redirectUrl = request.nextUrl.clone();
   const hasSessionToken = request.cookies.has("next-auth.session-token");
   const isSignInRoute = redirectUrl.pathname === "/auth/sign-in";
-  console.log("redirectUrl", redirectUrl);
-  console.log("----------------------------------------");
-  console.log("hasSessionToken", hasSessionToken);
-  console.log("----------------------------------------");
-  console.log("isSignInRoute", isSignInRoute);
-  console.log("----------------------------------------");
   if (hasSessionToken && isSignInRoute) {
     redirectUrl.pathname = "/admin";
     return NextResponse.redirect(redirectUrl);

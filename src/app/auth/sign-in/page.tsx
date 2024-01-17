@@ -2,8 +2,55 @@
 import InputField from "../../../components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "../../../components/checkbox";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 function SignInDefault() {
+  const { push } = useRouter();
+  const [formData, setFormData] = useState<{ email: string; password: string }>(
+    {
+      email: "",
+      password: "",
+    }
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const { name, value }: { name: string; value: string } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+      if (res?.status != 200) {
+        return toast.error("Wrong email or password", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          theme: "light",
+        });
+      } else {
+        push("/admin");
+      }
+    } catch (error) {
+      return toast.error("Unknow error", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        theme: "light",
+      });
+    }
+  };
   return (
     <div className="mt-[20vh] py-7 px-16 border-white rounded-2xl border-slate-600 bg-slate-600">
       <div className="flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
@@ -35,6 +82,8 @@ function SignInDefault() {
             placeholder="mail@simmmple.com"
             id="email"
             type="text"
+            name="email"
+            onChange={handleChange}
           />
 
           {/* Password */}
@@ -45,6 +94,8 @@ function SignInDefault() {
             placeholder="Min. 8 characters"
             id="password"
             type="password"
+            name="password"
+            onChange={handleChange}
           />
           {/* Checkbox */}
           <div className="mb-4 flex items-center justify-between px-2">
@@ -61,7 +112,10 @@ function SignInDefault() {
               Forgot Password?
             </a>
           </div>
-          <button className="linear w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 bg-cyan-300">
+          <button
+            className="linear w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 bg-cyan-300"
+            onClick={(e: any) => onSubmit(e)}
+          >
             Sign In
           </button>
           <div className="mt-4">

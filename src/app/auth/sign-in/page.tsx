@@ -9,7 +9,6 @@ import { signIn } from "next-auth/react";
 function SignInDefault() {
   const { push } = useRouter();
   const [isLogged, setIsLogged] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isPassInvalid, seIsPassInvalid] = useState<boolean>(false);
   const [invalidUser, setInvalidUser] = useState<boolean>(false);
   const [formData, setFormData] = useState<{ email: string; password: string }>(
@@ -34,10 +33,10 @@ function SignInDefault() {
         redirect: false,
       });
       console.log(res);
-      if (!res) {
+      if (res?.status != 200) {
         seIsPassInvalid(true);
         setInvalidUser(true);
-        console.log("signIn had an error");
+        console.log("Wrong user or password");
       } else {
         setIsLogged(true);
       }
@@ -45,7 +44,6 @@ function SignInDefault() {
       console.log("signIn had an error", error);
     }
   };
-
   useEffect(() => {
     if (isPassInvalid) {
       setTimeout(() => {
@@ -59,7 +57,7 @@ function SignInDefault() {
     }
     if (isLogged) {
       setTimeout(() => {
-        push("/admin/profile");
+        push("/admin");
       }, 1400);
     }
   }, [isPassInvalid, invalidUser, isLogged]);

@@ -22,7 +22,6 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        let res: Success;
         console.log(credentials);
         const response = await axios.post(
           `http://localhost:8000/v1/auth/login`,
@@ -36,18 +35,15 @@ export const options: NextAuthOptions = {
             },
           }
         );
-        res = response.data;
+        let res = response.data;
         if (res.statusCode === 201) {
           // Any object returned will be saved in `user` property of the JWT
           let user: User = {
             ...res.data,
           };
-          console.log("user", user);
           return user;
         } else {
-          // If you return null then an error will be displayed advising the user to check their details.
           return null;
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
       },
     }),
@@ -55,19 +51,16 @@ export const options: NextAuthOptions = {
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user, account }: any) {
-      if (user && account) {
+    async jwt({ token, user }: any) {
+      if (user) {
         return { ...token, ...user };
       }
       return token;
     },
     async session({ session, token }) {
       session.user = token;
+      session;
       return session;
     },
   },
-  //   pages: {
-  //     signIn: "/login",
-  //     signOut: "/login",
-  //   },
 };

@@ -1,10 +1,6 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 
 export default function Home() {
-  return (
-    <main>
-     Dashbosrd
-    </main>
-  )
+  return <main>Main</main>;
 }

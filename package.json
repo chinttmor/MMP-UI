@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.1",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/next-auth": "^3.15.0",
     "axios": "^1.6.5",

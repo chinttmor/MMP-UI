@@ -1,3 +1,5 @@
+import { FieldValues, UseFormRegister } from "react-hook-form";
+
 // Custom components
 function InputField(props: {
   id: string;
@@ -8,8 +10,11 @@ function InputField(props: {
   state?: string;
   disabled?: boolean;
   type?: string;
-  name?: string;
-  onChange?: any;
+  name: string;
+  register: UseFormRegister<FieldValues>;
+  maxLength: number;
+  minLength: number;
+  pattern: RegExp;
 }) {
   const {
     label,
@@ -21,7 +26,10 @@ function InputField(props: {
     state,
     disabled,
     name,
-    onChange,
+    register,
+    maxLength,
+    minLength,
+    pattern,
   } = props;
 
   return (
@@ -35,9 +43,7 @@ function InputField(props: {
         {label}
       </label>
       <input
-        onChange={onChange}
         disabled={disabled}
-        name={name}
         type={type}
         id={id}
         placeholder={placeholder}
@@ -50,6 +56,21 @@ function InputField(props: {
             ? "border-green-500 text-green-500 placeholder:text-green-500 dark:!border-green-400 dark:!text-green-400 dark:placeholder:!text-green-400"
             : "border-gray-200 dark:!border-white/10 dark:text-white"
         }`}
+        {...register(name, {
+          required: "This field is required",
+          maxLength: {
+            value: maxLength,
+            message: `Max length of this field is ${maxLength}`,
+          },
+          minLength: {
+            value: minLength,
+            message: `Max length of this field is ${minLength}`,
+          },
+          pattern: {
+            value: pattern,
+            message: "The input is not right",
+          },
+        })}
       />
     </div>
   );

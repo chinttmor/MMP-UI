@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { Success } from "@/type/res.type";
 import axios from "axios";
 import { Awaitable, NextAuthOptions, RequestInternal, User } from "next-auth";
+import { api } from "@/config/axios.config";
 // import User from "@/app/(models)/User";
 // import bcrypt from "bcrypt";
 
@@ -22,19 +23,27 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        const response = await axios.post(
-          `${process.env.NEXTAUTH_URL}auth/login`,
-          {
-            email: credentials?.email,
-            password: credentials?.password,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
+        console.log(credentials);
+        const response =
+          //api.post("/auth/login", {
+
+          //     email: credentials?.email,
+          //     password: credentials?.password,
+
+          // });
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            {
+              email: credentials?.email,
+              password: credentials?.password,
             },
-          }
-        );
-        let res = response.data;
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        let res = (await response).data;
         if (res.statusCode === 201) {
           // Any object returned will be saved in `user` property of the JWT
           let user: User = {

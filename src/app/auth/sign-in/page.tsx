@@ -1,35 +1,66 @@
 'use client';
-import InputField from 'components/fields/InputField';
-import Default from 'components/auth/variants/DefaultAuthLayout';
+import InputField from '../../../components/fields/InputField';
 import { FcGoogle } from 'react-icons/fc';
-import Checkbox from 'components/checkbox';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-toastify';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { EmailRegex } from 'constants/Regex/email.regex';
+import { PasswordRegex } from 'constants/Regex/password.regex';
+import { background } from '@chakra-ui/system';
 
 function SignInDefault() {
+  const { push } = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+      if (res?.status != 200) {
+        return toast.error('Wrong email or password');
+      } else {
+        push('/admin/default');
+      }
+    } catch (error) {
+      return toast.error('Unknow error');
+    }
+  };
   return (
-    <Default
-      maincard={
-        <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
-          {/* Sign in section */}
-          <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
-            <h3 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
-              Sign In
-            </h3>
-            <p className="mb-9 ml-1 text-base text-gray-600">
-              Enter your email and password to sign in!
+    <div
+      className="border-slate-600 bg-black bg-slate-500 mt-[20vh] flex w-full items-center justify-center rounded-2xl border-white px-16	py-7"
+      style={{ backgroundColor: '#475569' }}
+    >
+      <div className="mb-[3vh] flex h-full w-full items-center justify-center px-2">
+        {/* Sign in section */}
+        <div className="w-full max-w-full flex-col items-center justify-items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
+          <h3 className="mb-2.5 text-4xl font-bold text-white">Sign In</h3>
+          <p className="mb-9 ml-1 text-base text-white">
+            Enter your email and password to sign in!
+          </p>
+          <div
+            className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl text-white hover:cursor-pointer dark:bg-navy-800"
+            style={{ backgroundColor: '#67e8f9' }}
+          >
+            <div className="rounded-full border-white text-xl">
+              <FcGoogle />
+            </div>
+            <p className="text-sm font-medium text-white">
+              Sign In with Google
             </p>
-            <div className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-lightPrimary hover:cursor-pointer dark:bg-navy-800 dark:text-white">
-              <div className="rounded-full text-xl">
-                <FcGoogle />
-              </div>
-              <p className="text-sm font-medium text-navy-700 dark:text-white">
-                Sign In with Google
-              </p>
-            </div>
-            <div className="mb-6 flex items-center  gap-3">
-              <div className="h-px w-full bg-gray-200 dark:!bg-navy-700" />
-              <p className="text-base text-gray-600"> or </p>
-              <div className="h-px w-full bg-gray-200 dark:!bg-navy-700" />
-            </div>
+          </div>
+          <div className="mb-6 flex items-center">
+            <div className="h-px w-full bg-gray-200 dark:!bg-navy-700" />
+            <div className="h-px w-full bg-gray-200 dark:!bg-navy-700" />
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
             <InputField
               variant="auth"
@@ -38,6 +69,11 @@ function SignInDefault() {
               placeholder="mail@simmmple.com"
               id="email"
               type="text"
+              name="email"
+              register={register}
+              maxLength={20}
+              minLength={6}
+              pattern={EmailRegex}
             />
 
             {/* Password */}
@@ -48,40 +84,34 @@ function SignInDefault() {
               placeholder="Min. 8 characters"
               id="password"
               type="password"
+              name="password"
+              register={register}
+              maxLength={20}
+              minLength={6}
+              pattern={PasswordRegex}
             />
-            {/* Checkbox */}
-            <div className="mb-4 flex items-center justify-between px-2">
-              <div className="mt-2 flex items-center">
-                <Checkbox />
-                <p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">
-                  Keep me logged In
-                </p>
-              </div>
-              <a
-                className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"
-                href=" "
-              >
-                Forgot Password?
-              </a>
-            </div>
-            <button className="linear w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200">
+
+            <button
+              className="linear w-full rounded-xl bg-brand-500 bg-cyan-300 py-3 text-base font-medium text-white text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:hover:bg-brand-300 dark:active:bg-brand-200"
+              type="submit"
+            >
               Sign In
             </button>
-            <div className="mt-4">
-              <span className="text-sm font-medium text-navy-700 dark:text-gray-500">
-                Not registered yet?
-              </span>
-              <a
-                href="/auth/sign-up/default"
-                className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"
-              >
-                Create an account
-              </a>
-            </div>
+          </form>
+          <div className="mt-4">
+            <span className="text-white-700 text-sm font-medium">
+              Not registered yet?
+            </span>
+            <a
+              href="/auth/register"
+              className="ml-1 text-sm font-bold text-cyan-300 hover:text-brand-600"
+            >
+              Create an account
+            </a>
           </div>
         </div>
-      }
-    />
+      </div>
+    </div>
   );
 }
 

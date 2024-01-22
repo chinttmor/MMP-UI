@@ -15,9 +15,9 @@ import avatar from '/public/img/avatars/avatar4.png';
 
 const Navbar = (props: { brandText: string; [x: string]: any }) => {
   const { onOpenSidenav, brandText, mini, hovered } = props;
-  const [darkmode, setDarkmode] = React.useState(
-    document.body.classList.contains('dark'),
-  );
+  // const [darkmode, setDarkmode] = React.useState(
+  //   // document.body.classList.contains('dark'),
+  // );
   return (
     <nav
       className={`duration-175 linear fixed left-3 top-3 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/30 transition-all ${
@@ -167,21 +167,21 @@ const Navbar = (props: { brandText: string; [x: string]: any }) => {
         </Dropdown>
         <div
           className="cursor-pointer text-gray-600"
-          onClick={() => {
-            if (darkmode) {
-              document.body.classList.remove('dark');
-              setDarkmode(false);
-            } else {
-              document.body.classList.add('dark');
-              setDarkmode(true);
-            }
-          }}
+          // onClick={() => {
+          //   if (darkmode) {
+          //     document.body.classList.remove('dark');
+          //     setDarkmode(false);
+          //   } else {
+          //     document.body.classList.add('dark');
+          //     setDarkmode(true);
+          //   }
+          // }}
         >
-          {darkmode ? (
+          {/* {darkmode ? (
             <RiSunFill className="h-4 w-4 text-gray-600 dark:text-white" />
           ) : (
             <RiMoonFill className="h-4 w-4 text-gray-600 dark:text-white" />
-          )}
+          )} */}
         </div>
         {/* Profile & Dropdown */}
         <Dropdown

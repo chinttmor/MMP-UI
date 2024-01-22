@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 import React, { ReactNode } from 'react';
 import 'styles/App.css';
 import 'styles/Contact.css';
@@ -9,13 +9,12 @@ import 'styles/index.css';
 
 import dynamic from 'next/dynamic';
 
-const _NoSSR = ({ children }) => <React.Fragment>{children}</React.Fragment>;
+const Main = ({ children }) => <React.Fragment>{children}</React.Fragment>;
 
-const NoSSR = dynamic(() => Promise.resolve(_NoSSR), {
-  ssr: false,
-});
+// const NoSSR = dynamic(() => Promise.resolve(_NoSSR), {
+//   ssr: false,
+// });
 
 export default function AppWrappers({ children }: { children: ReactNode }) {
-  // @ts-expect-error
-  return <NoSSR>{children}</NoSSR>;
+  return <Main>{children}</Main>;
 }

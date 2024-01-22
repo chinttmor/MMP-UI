@@ -19,9 +19,9 @@ export default function Admin({ children }: { children: React.ReactNode }) {
   const [fixed] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  if (isWindowAvailable()) document.documentElement.dir = 'rtl';
+  // if (isWindowAvailable()) document.documentElement.dir = 'rtl';
   return (
-    <div className="flex h-full w-full bg-background-100 dark:bg-background-900">
+    <div className="flex h-full w-full">
       <Sidebar
         routes={routes}
         open={open}
@@ -29,10 +29,10 @@ export default function Admin({ children }: { children: React.ReactNode }) {
         variant="admin"
       />
       {/* Navbar & Main Content */}
-      <div className="h-full w-full font-dm dark:bg-navy-900">
+      <div className="h-full w-full font-dm ">
         {/* Main Content */}
         <main
-          className={`mx-2.5  flex-none transition-all dark:bg-navy-900 
+          className={`mx-2.5  flex-none transition-all
               md:pl-2 xl:mr-[323px]`}
         >
           {/* Routes */}

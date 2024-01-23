@@ -15,22 +15,15 @@ export async function middleware(request: NextRequest) {
   if (hasSessionToken) {
     if (matchesProtectedPath) {
       if (token.zone[0] !== Role.ADMIN) {
-        console.log(token.zone[0]);
-        console.log(Role.ADMIN.valueOf());
         redirectUrl.pathname = '/landing-page';
-        console.log('not admin');
         return NextResponse.redirect(redirectUrl);
       } else {
-        console.log(token.zone[0]);
-        console.log(Role.ADMIN.valueOf());
-        console.log('is admin');
         return NextResponse.next();
       }
     } else {
       return NextResponse.next();
     }
   } else if (!hasSessionToken) {
-    console.log('not sign in ');
     redirectUrl.pathname = '/auth/sign-in';
     return NextResponse.redirect(redirectUrl);
   } else {

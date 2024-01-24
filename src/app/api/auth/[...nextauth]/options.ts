@@ -39,7 +39,6 @@ export const options: NextAuthOptions = {
           let user: User = {
             ...res.data,
           };
-          console.log('user', user);
           return user;
         } else {
           return null;

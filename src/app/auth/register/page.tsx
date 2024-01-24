@@ -33,21 +33,9 @@ function SignInDefault() {
           },
         },
       );
-      return toast.success(`Data input is ok , sign in with your new account`, {
-        position: 'top-center',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        theme: 'light',
-      });
+      return toast.success(`Data input is ok , sign in with your new account`);
     } catch {
-      return toast.error(`Unknow errors`, {
-        position: 'top-center',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        theme: 'light',
-      });
+      return toast.error(`Unknow errors`);
     }
   };
 

@@ -7,11 +7,9 @@ import { toast } from 'react-toastify';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { EmailRegex } from 'constants/Regex/email.regex';
 import { PasswordRegex } from 'constants/Regex/password.regex';
-import { background } from '@chakra-ui/system';
 
 function SignInDefault() {
   const { push } = useRouter();
-
   const {
     register,
     handleSubmit,

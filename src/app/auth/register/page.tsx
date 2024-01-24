@@ -7,9 +7,8 @@ import { EmailRegex } from 'constants/Regex/email.regex';
 import { PasswordRegex } from 'constants/Regex/password.regex';
 import { Phone_NumberRegex } from 'constants/Regex/phone-number.regex';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { ErrorMessage } from '@hookform/error-message';
-// import { RegisterForm } from "@/type/registerform.type";
+import instance from 'config/axios.config';
 
 function SignInDefault() {
   const {
@@ -19,8 +18,8 @@ function SignInDefault() {
   } = useForm();
   const onSubmit = async (data: FieldValues) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}auth/register`,
+      const res = await instance.post(
+        `auth/register`,
         {
           name: data.name,
           email: data.email,

@@ -6,30 +6,29 @@ import { Role } from './constants/Enum/role.enum';
 export async function middleware(request: NextRequest) {
   const redirectUrl = request.nextUrl;
   const hasSessionToken = request.cookies.has('next-auth.session-token');
-  const isSignInRoute = redirectUrl.pathname === '/auth/sign-in';
   const protectedPaths = ['/admin'];
   const matchesProtectedPath = protectedPaths.some((path) =>
     redirectUrl.pathname.startsWith(path),
   );
   const token = await getToken({ req: request });
-  if (hasSessionToken) {
-    if (matchesProtectedPath) {
-      if (token.zone[0] !== Role.ADMIN) {
-        redirectUrl.pathname = '/landing-page';
-        return NextResponse.redirect(redirectUrl);
-      } else {
-        return NextResponse.next();
-      }
-    } else {
-      return NextResponse.next();
-    }
-  } else if (!hasSessionToken) {
-    redirectUrl.pathname = '/auth/sign-in';
-    return NextResponse.redirect(redirectUrl);
-  } else {
-    redirectUrl.pathname = '/errors/404';
-    return NextResponse.redirect(redirectUrl);
+  const isAdmin =
+    hasSessionToken && matchesProtectedPath && token.zone[0] === Role.ADMIN;
+
+  if (isAdmin) {
+    return NextResponse.next();
   }
+
+  if (!hasSessionToken) {
+    redirectUrl.pathname = '/auth/sign-in';
+  } else {
+    if (!matchesProtectedPath) {
+      return NextResponse.next();
+    } else {
+      redirectUrl.pathname = '/landing-page';
+    }
+  }
+
+  return NextResponse.redirect(redirectUrl);
 }
 
 export const config = {

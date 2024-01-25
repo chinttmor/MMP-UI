@@ -1,6 +1,8 @@
+'use client';
 import React from 'react';
 import CardMenu from 'components/card/CardMenu';
 import Card from 'components/card';
+import Button from 'components/button/button';
 
 import {
   createColumnHelper,
@@ -21,6 +23,8 @@ type RowObj = {
 function ColumnsTable(props: { tableData: any }) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const onPageChange = (page: number) => setCurrentPage(page);
   let defaultData = tableData;
   const columns = [
     columnHelper.accessor('name', {
@@ -85,70 +89,123 @@ function ColumnsTable(props: { tableData: any }) {
     debugTable: true,
   });
   return (
-    <Card extra={'w-full pb-10 p-4 h-full'}>
-      <header className="relative flex items-center justify-between">
-        <div className="text-xl font-bold text-navy-700 dark:text-white">
-          4-Columns Table
-        </div>
-        <CardMenu />
-      </header>
+    <div>
+      <Card extra={'w-full pb-10 p-4 h-full'}>
+        <header className="relative flex items-center justify-between">
+          <div className="text-xl font-bold text-navy-700 ">
+            4-Columns Table
+          </div>
+          <CardMenu />
+        </header>
 
-      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="!border-px !border-gray-400">
-                {headerGroup.headers.map((header) => {
+        <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+          <table className="h-full w-full">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr
+                  key={headerGroup.id}
+                  className="!border-px !border-gray-400"
+                >
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={header.column.getToggleSortingHandler()}
+                        className="cursor-pointer border-b border-gray-200 pb-2 pr-4 pt-4 text-start dark:border-white/30"
+                      >
+                        <div className="items-center justify-between text-xs text-gray-200">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          {{
+                            asc: '',
+                            desc: '',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table
+                .getRowModel()
+                .rows.slice(0, 10)
+                .map((row) => {
                   return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-b border-gray-200 pb-2 pr-4 pt-4 text-start dark:border-white/30"
+                    <tr
+                      style={{
+                        height: '70px',
+                      }}
+                      key={row.id}
                     >
-                      <div className="items-center justify-between text-xs text-gray-200">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: '',
-                          desc: '',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </th>
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <td
+                            key={cell.id}
+                            className="min-w-[150px] border-white/0 py-3 pr-4 "
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
                   );
                 })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 5)
-              .map((row) => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <td
-                          key={cell.id}
-                          className="min-w-[150px] border-white/0 py-3  pr-4"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
+        <div className="flex overflow-x-auto sm:justify-center"></div>
+      </Card>
+      <div className="mr-10 mt-3 grid justify-items-end">
+        <nav aria-label="Page navigation example">
+          <ul className="list-style-none flex">
+            <li>
+              <Button name="Previous" small={false} />
+            </li>
+            <li>
+              <Button name="1" small={true} />
+            </li>
+            <li>
+              <Button name="2" small={true} />
+            </li>
+            <li>
+              <Button name="3" small={true} />
+            </li>
+            <li>
+              <Button name="4" small={true} />
+            </li>
+            <li>
+              <Button name="5" small={true} />
+            </li>
+            <li>
+              <Button name="6" small={true} />
+            </li>
+            <li>
+              <Button name="7" small={true} />
+            </li>
+            <li>
+              <Button name="8" small={true} />
+            </li>
+            <li>
+              <Button name="9" small={true} />
+            </li>
+            <li>
+              <Button name="10" small={true} />
+            </li>
+            <li>
+              <Button name="Next" small={false} />
+            </li>
+          </ul>
+        </nav>
       </div>
-    </Card>
+    </div>
   );
 }
 

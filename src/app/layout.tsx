@@ -4,7 +4,13 @@ import './globals.css';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
 
+const queryClient = new QueryClient();
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -32,7 +38,9 @@ export default function RootLayout({
           pauseOnHover
           theme="light"
         />
+        {/* <QueryClientProvider client={queryClient}> */}
         {children}
+        {/* </QueryClientProvider> */}
       </body>
     </html>
   );

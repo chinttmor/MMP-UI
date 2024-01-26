@@ -13,19 +13,21 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { Role } from 'constants/Enum/role.enum';
+import tableDataColumns from 'variables/data-tables/tableDataColumns';
+
 type RowObj = {
-  name: [string, boolean];
-  progress: string;
-  quantity: number;
-  date: string;
+  email: string;
+  name: string;
+  phone: string;
+  zone: Role;
 };
 
 function ColumnsTable(props: { tableData: any }) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const onPageChange = (page: number) => setCurrentPage(page);
   let defaultData = tableData;
+  console.log('defaultData', defaultData);
   const columns = [
     columnHelper.accessor('name', {
       id: 'name',
@@ -38,12 +40,10 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
-    columnHelper.accessor('progress', {
-      id: 'progress',
+    columnHelper.accessor('email', {
+      id: 'email',
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          PROGRESS
-        </p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">EMAIL</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -51,12 +51,10 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
-    columnHelper.accessor('quantity', {
-      id: 'quantity',
+    columnHelper.accessor('phone', {
+      id: 'phone',
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          QUANTITY
-        </p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">PHONE</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -64,10 +62,10 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
-    columnHelper.accessor('date', {
-      id: 'date',
+    columnHelper.accessor('zone', {
+      id: 'zone',
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">DATE</p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">ZONE</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -76,7 +74,7 @@ function ColumnsTable(props: { tableData: any }) {
       ),
     }),
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(() => [...defaultData]);
+  const [data, setData] = React.useState(() => defaultData);
   const table = useReactTable({
     data,
     columns,
@@ -90,6 +88,7 @@ function ColumnsTable(props: { tableData: any }) {
   });
   return (
     <div>
+      {/* <div> ${defaultData}</div> */}
       <Card extra={'w-full pb-10 p-4 h-full'}>
         <header className="relative flex items-center justify-between">
           <div className="text-xl font-bold text-navy-700 ">

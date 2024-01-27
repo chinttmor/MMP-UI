@@ -1,34 +1,81 @@
+import { Role } from 'constants/Enum/role.enum';
+
 type RowObj = {
   name: string;
-  progress: string;
-  quantity: number;
-  date: string;
+  email: string;
+  phone: string;
+  zone: Role;
 };
 
 const tableDataColumns: RowObj[] = [
   {
-    name: 'Horizon UI PRO',
-    quantity: 2458,
-    progress: '17.5%',
-    date: '12 Jan 2021',
+    name: 'Norrrby',
+    email: 'nwitherbyo@indiatimes.com',
+    phone: '5029918214',
+    zone: Role.STUDENT,
   },
+
   {
-    name: 'Horizon UI Free',
-    quantity: 1485,
-    progress: '10.8%',
-    date: '21 Feb 2021',
+    name: 'Tobias Hafner',
+    email: 'thafnerp@businessweek.com',
+    phone: '3825825189',
+    zone: Role.STUDENT,
   },
+
   {
-    name: 'Weekly Update',
-    quantity: 1024,
-    progress: '21.3%',
-    date: '13 Mar 2021',
+    name: 'Jeramie Dodwell',
+    email: 'jdodwellq@europa.eu',
+    phone: '6345837468',
+    zone: Role.STUDENT,
   },
+
   {
-    name: 'Venus 3D Asset',
-    quantity: 858,
-    progress: '31.5%',
-    date: '24 Jan 2021',
+    name: 'Alleen Ramelot',
+    email: 'aramelotr@addtoany.com',
+    phone: '9729302810',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Calvin Curtois',
+    email: 'ccurtoiss@geocities.com',
+    phone: '6134157231',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Erv Eyre',
+    email: 'eeyret@bravesites.com',
+    phone: '9429793219',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Bernadine Stoffer',
+    email: 'bstofferu@forbes.com',
+    phone: '6369510619',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Darcy Clinnick',
+    email: 'dclinnickv@cornell.edu',
+    phone: '7407628405',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Nanice Newall',
+    email: 'nnewallw@netvibes.com',
+    phone: '2857995250',
+    zone: Role.STUDENT,
+  },
+
+  {
+    name: 'Tamiko Flockhart',
+    email: 'tflockhartx@businesswire.com',
+    phone: '2187961457',
+    zone: Role.STUDENT,
   },
 ];
 

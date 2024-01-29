@@ -1,27 +1,58 @@
 'use client';
-import tableDataDevelopment from 'variables/data-tables/tableDataDevelopment';
-import tableDataCheck from 'variables/data-tables/tableDataCheck';
-import CheckTable from 'components/admin/data-tables/CheckTable';
 import tableDataColumns from 'variables/data-tables/tableDataColumns';
-import tableDataComplex from 'variables/data-tables/tableDataComplex';
-import DevelopmentTable from 'components/admin/data-tables/DevelopmentTable';
 import ColumnsTable from 'components/admin/data-tables/ColumnsTable';
-import ComplexTable from 'components/admin/data-tables/ComplexTable';
+import instance from 'config/axios.config';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
+import useApi from 'app/hooks/useApi';
+import Pagination from 'components/pagination/Pagination';
+// import { useGetPosts } from './api/user-1-10';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const Tables = () => {
+  const api = useApi();
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [currentLimit, setCurrentLimit] = React.useState(10);
+  const [currentTableData, setCurrentTableData] = React.useState([]);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const createPageURL = (currentPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', currentPage.toString());
+    console.log(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`);
+  };
+  function handleClick() {
+    setCurrentPage(currentPage + 1);
+    console.log(currentPage);
+    createPageURL(currentPage);
+    console.log(searchParams.getAll('page'));
+  }
+  async function handlePage() {
+    const res = await api.get(
+      `user/all?page=${currentPage}&limit=${currentLimit}`,
+    );
+    setCurrentTableData(res.data.data.allUSer);
+    console.log(currentPage, res, 'all user', res.data.data.allUSer);
+  }
+  useEffect(() => {
+    handlePage();
+  }, [currentPage]);
+
   return (
-    <div>
-      <div className="mt-5 grid h-full grid-cols-1 gap-5 md:grid-cols-2">
-        <DevelopmentTable tableData={tableDataDevelopment} />
-        <CheckTable tableData={tableDataCheck} />
+    <QueryClientProvider client={queryClient}>
+      <div className="mt-10" onClick={handleClick}>
+        <ColumnsTable tableData={currentTableData} />
+        <Pagination />
       </div>
-
-      <div className="mt-5 grid h-full grid-cols-1 gap-5 md:grid-cols-2">
-        <ColumnsTable tableData={tableDataColumns} />
-
-        <ComplexTable tableData={tableDataComplex} />
-      </div>
-    </div>
+    </QueryClientProvider>
   );
 };
 

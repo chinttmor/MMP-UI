@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CardMenu from 'components/card/CardMenu';
 import Card from 'components/card';
 import Button from 'components/button/button';
@@ -15,6 +15,9 @@ import {
 
 import { Role } from 'constants/Enum/role.enum';
 import tableDataColumns from 'variables/data-tables/tableDataColumns';
+import Link from 'next/link';
+import ChangeDetail from 'components/icons/ChangeDetail';
+import Form from './Detail_Form';
 
 type RowObj = {
   email: string;
@@ -27,7 +30,6 @@ function ColumnsTable(props: { tableData: any }) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   let defaultData = tableData;
-  console.log('defaultData', defaultData);
   const columns = [
     columnHelper.accessor('name', {
       id: 'name',
@@ -74,7 +76,10 @@ function ColumnsTable(props: { tableData: any }) {
       ),
     }),
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(() => defaultData);
+  const [data, setData] = React.useState(() => [...defaultData]);
+  useEffect(()=>{
+    setData([...defaultData])
+  },[defaultData])
   const table = useReactTable({
     data,
     columns,
@@ -88,18 +93,18 @@ function ColumnsTable(props: { tableData: any }) {
   });
   return (
     <div>
-      {/* <div> ${defaultData}</div> */}
+      <Form/>
       <Card extra={'w-full pb-10 p-4 h-full'}>
         <header className="relative flex items-center justify-between">
           <div className="text-xl font-bold text-navy-700 ">
-            4-Columns Table
+            User Data List
           </div>
           <CardMenu />
         </header>
 
         <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
           <table className="h-full w-full">
-            <thead>
+            <thead className='cursor-pointer border-b border-gray-200 pb-2 pr-4 pt-4 text-start'>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
@@ -111,7 +116,7 @@ function ColumnsTable(props: { tableData: any }) {
                         key={header.id}
                         colSpan={header.colSpan}
                         onClick={header.column.getToggleSortingHandler()}
-                        className="cursor-pointer border-b border-gray-200 pb-2 pr-4 pt-4 text-start dark:border-white/30"
+                        className="cursor-pointer border-b border-gray-200 pb-2 pr-4 pt-4 text-start"
                       >
                         <div className="items-center justify-between text-xs text-gray-200">
                           {flexRender(
@@ -154,6 +159,19 @@ function ColumnsTable(props: { tableData: any }) {
                           </td>
                         );
                       })}
+                      <td
+                      className='min-w-[70px] border-white/0 py-3 pr-4 text-brand-600 '
+                      > 
+                      <Link href={'/'} > View details</Link>
+                      </td>
+                      <td
+                      className='min-w-[30px] border-white/0 py-3 pr-4 text-brand-600 '
+                      > 
+                      <button >
+                      <ChangeDetail/>
+                      </button>
+                      
+                      </td>
                     </tr>
                   );
                 })}
@@ -162,48 +180,6 @@ function ColumnsTable(props: { tableData: any }) {
         </div>
         <div className="flex overflow-x-auto sm:justify-center"></div>
       </Card>
-      <div className="mr-10 mt-3 grid justify-items-end">
-        <nav aria-label="Page navigation example">
-          <ul className="list-style-none flex">
-            <li>
-              <Button name="Previous" small={false} />
-            </li>
-            <li>
-              <Button name="1" small={true} />
-            </li>
-            <li>
-              <Button name="2" small={true} />
-            </li>
-            <li>
-              <Button name="3" small={true} />
-            </li>
-            <li>
-              <Button name="4" small={true} />
-            </li>
-            <li>
-              <Button name="5" small={true} />
-            </li>
-            <li>
-              <Button name="6" small={true} />
-            </li>
-            <li>
-              <Button name="7" small={true} />
-            </li>
-            <li>
-              <Button name="8" small={true} />
-            </li>
-            <li>
-              <Button name="9" small={true} />
-            </li>
-            <li>
-              <Button name="10" small={true} />
-            </li>
-            <li>
-              <Button name="Next" small={false} />
-            </li>
-          </ul>
-        </nav>
-      </div>
     </div>
   );
 }

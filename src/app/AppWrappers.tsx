@@ -1,20 +1,29 @@
-// 'use client';
+'use client';
 import React, { ReactNode } from 'react';
-import 'styles/App.css';
-import 'styles/Contact.css';
-// import '@asseinfo/react-kanban/dist/styles.css';
-// import 'styles/Plugins.css';
-import 'styles/MiniCalendar.css';
-import 'styles/index.css';
-
-import dynamic from 'next/dynamic';
+import { getSession, SessionProvider } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 const Main = ({ children }) => <React.Fragment>{children}</React.Fragment>;
 
-// const NoSSR = dynamic(() => Promise.resolve(_NoSSR), {
-//   ssr: false,
-// });
+export interface AppWrappersProps {
+  children: React.ReactNode
+  session: Session
+}
+// AppWrappers.getInitialProps = async (context) => {
+//   const { ctx } = context;
+//   const session = await getSession(ctx);
+//   return {
+//     session,
+//   };
+// };
 
-export default function AppWrappers({ children }: { children: ReactNode }) {
-  return <Main>{children}</Main>;
+export default function AppWrappers({ children,session }: AppWrappersProps) {
+  return (
+  <Main>
+  <SessionProvider baseUrl={process.env.NEXTAUTH_URL} refetchInterval={60 * 5} session={session} >
+    {children}
+  </SessionProvider>
+  </Main>
+  )
+
 }

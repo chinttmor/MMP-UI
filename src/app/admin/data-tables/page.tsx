@@ -12,47 +12,85 @@ import {
   QueryClientProvider,
   useQuery,
 } from '@tanstack/react-query';
+import Button from 'components/button/button';
+import { toast } from 'react-toastify';
 
 const queryClient = new QueryClient();
 
 const Tables = () => {
   const api = useApi();
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [currentLimit, setCurrentLimit] = React.useState(10);
-  const [currentTableData, setCurrentTableData] = React.useState([]);
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { replace } = useRouter();
-  const createPageURL = (currentPage: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', currentPage.toString());
-    console.log(`${pathname}?${params.toString()}`);
-    replace(`${pathname}?${params.toString()}`);
-  };
-  function handleClick() {
-    setCurrentPage(currentPage + 1);
-    console.log(currentPage);
-    createPageURL(currentPage);
-    console.log(searchParams.getAll('page'));
+  const [currentPage, setCurrentPage] = React.useState(searchParams.get('page') ?? '1');
+  const [currentLimit, setCurrentLimit] = React.useState(5);
+  const [currentTableData, setCurrentTableData] = React.useState([]);
+  const [pageNumbers, setPageNumbers] = React.useState([1])
+  function handleClick(page: number) {
+    if(page===-1){
+      const newPage = (parseInt(currentPage)-1)
+      if(newPage >= 1){
+        setCurrentPage(newPage.toString());
+      }else{
+        toast.error('The previos page does not exist'); 
+      }
+    }else if(page === 0){
+      const newPage = (parseInt(currentPage)+1)
+      if(newPage <= pageNumbers[pageNumbers.length - 1]){
+        setCurrentPage(newPage.toString());
+      }else{
+        toast.error('The next page does not exist'); 
+      }
+    }else{
+      setCurrentPage(page.toString());
+    }
   }
   async function handlePage() {
     const res = await api.get(
       `user/all?page=${currentPage}&limit=${currentLimit}`,
     );
     setCurrentTableData(res.data.data.allUSer);
-    console.log(currentPage, res, 'all user', res.data.data.allUSer);
+    setPageNumbers(res.data.data.numberOfPage)
   }
   useEffect(() => {
+    console.log(`searchParams.get('page')`,searchParams.get('page'))
+    console.log('currentPage',currentPage)
     handlePage();
+    const params = new URLSearchParams(searchParams);
+    params.set('page', currentPage);
+    replace(`${pathname}?${params.toString()}`);
   }, [currentPage]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="mt-10" onClick={handleClick}>
-        <ColumnsTable tableData={currentTableData} />
-        <Pagination />
+      <div className="mt-10" 
+      >
+      <div className="mb-3 mt-3 mr-3 grid justify-items-end">
+        <button 
+        // onClick={}
+        className='min-w-[80px] min-h-[50px] p-3 rounded-md bg-brand-700'
+        >Add new user</button>
       </div>
-    </QueryClientProvider>
+        <ColumnsTable tableData={currentTableData} />
+        <div className="mr-10 mt-3 grid justify-items-end">
+        <nav aria-label="Page navigation example">
+          <ul className="list-style-none flex">
+            <li onClick={() =>handleClick(-1)}>
+              <Button name="Previous" small={false} />
+            </li>
+            {pageNumbers.map(page=> {
+              return( 
+              <li onClick={() =>handleClick(page)}>
+                <Button name={page.toString()} small={true} focus={currentPage === page.toString()} />
+              </li>
+              )
+            })}
+            <li onClick={() =>handleClick(0)}>
+              <Button name="Next" small={false}  />
+            </li>
+          </ul>
+        </nav>
+      </div>
+      </div>
   );
 };
 

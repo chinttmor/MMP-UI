@@ -10,7 +10,10 @@ export const useRefreshToken = () => {
         Authorization: `Bearer ${session?.user.refreshToken}`,
       },
     });
-    if (session) session.user.accessToken = res.data.data.accessToken;
+    if (session) {
+      session.user.accessToken = res.data.data.accessToken;
+      session.user.refreshToken = res.data.data.refreshToken;
+    }
     else signIn();
   };
   return refreshToken;

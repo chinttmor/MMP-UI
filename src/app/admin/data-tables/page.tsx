@@ -53,8 +53,6 @@ const Tables = () => {
     setPageNumbers(res.data.data.numberOfPage)
   }
   useEffect(() => {
-    console.log(`searchParams.get('page')`,searchParams.get('page'))
-    console.log('currentPage',currentPage)
     handlePage();
     const params = new URLSearchParams(searchParams);
     params.set('page', currentPage);

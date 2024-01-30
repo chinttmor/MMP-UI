@@ -94,9 +94,6 @@ dependencies:
   next-transpile-modules:
     specifier: ^9.0.0
     version: 9.1.0
-  query:
-    specifier: github:tanstack/react-query
-    version: git@github.com+tanstack/react-query/62704ce63a2c88c8005e037825060f33404cf74b
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -16405,11 +16402,4 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-    dev: false
-
-  git@github.com+tanstack/react-query/62704ce63a2c88c8005e037825060f33404cf74b:
-    resolution: {commit: 62704ce63a2c88c8005e037825060f33404cf74b, repo: git@github.com:tanstack/react-query.git, type: git}
-    name: query
-    version: 0.0.0
-    requiresBuild: true
     dev: false

@@ -12,41 +12,48 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-       run:
-         working-directory: ./server/
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
+   
     steps:
-      - name: Set Actions Allow Unsecure Commands
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v4
+      #   with:
+      #     # Automatically inject basePath in your Next.js configuration file and disable
+      #     # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
+      #     #
+      #     # You may remove this line if you want to manage the configuration yourself.
+      #     static_site_generator: next
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+      - name: Install dependencies
+        run: pnpm i
+      - name: Run lint
         run: |
-          echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
-
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-         node-version: ${{ matrix.node-version }}
-         cache: 'npm'
-         cache-dependency-path: './server/package-lock.json'
-
-      - name: Installing my packages
-        run: yarn install
-
-      - name: Build my App
-        run: yarn build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /chakra-nextjs-pro
-      - run: yarn export
-        env:
-          NEXT_PUBLIC_BASE_PATH: /chakra-nextjs-pro
-      - run: touch ./out/.nojekyll
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.5.9
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: out
+          touch .env.local
+          echo REMOTE_IMAGE_HOSTNAME=${{ secrets.REMOTE_IMAGE_HOSTNAME }} >> .env.local
+          echo REMOTE_IMAGE_PATHNAME=${{ secrets.REMOTE_IMAGE_PATHNAME }} >> .env.local
+          pnpm lint
+      - name: Build with Next.js
+        run: pnpm next build

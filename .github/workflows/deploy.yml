@@ -12,10 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+       run:
+         working-directory: ./server/
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
 
     steps:
       - name: Set Actions Allow Unsecure Commands
@@ -26,7 +28,9 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+         node-version: ${{ matrix.node-version }}
+         cache: 'npm'
+         cache-dependency-path: './server/package-lock.json'
 
       - name: Installing my packages
         run: yarn install

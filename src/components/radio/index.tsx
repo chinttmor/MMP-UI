@@ -1,5 +1,8 @@
+import { FieldValues, UseFormRegister } from 'react-hook-form';
+
 const Radio = (props: {
   checked?: boolean;
+  register: UseFormRegister<FieldValues>;
   color?:
     | 'red'
     | 'blue'
@@ -15,14 +18,17 @@ const Radio = (props: {
     | 'amber'
     | 'indigo'
     | 'gray';
-  id?: string;
+  type: string;
   name?: string;
 }) => {
-  const { checked, color, id, name, ...rest } = props;
+  const { checked, color, type, name,
+     register
+    } = props;
   return (
+    <label className='mt-2 gap-2 flex h-12 w-full items-center justify-center outline-none '>
     <input
-      id={id}
       name={name}
+      value={name}
       type="radio"
       checked={checked}
       className={`before:contet[""] relative h-5 w-5 cursor-pointer appearance-none rounded-full
@@ -59,8 +65,12 @@ const Radio = (props: {
            ? 'checked:!border-gray-500 checked:before:!bg-gray-500 dark:checked:!border-gray-400 dark:checked:before:!bg-gray-400'
            : 'checked:!border-brand-500 checked:before:!bg-brand-500 dark:checked:!border-brand-400 dark:checked:before:!bg-brand-400'
        } `}
-      {...rest}
+      {...register(type, {
+        required: 'This field is required'
+      })}
     />
+    {name}
+    </label>
   );
 };
 

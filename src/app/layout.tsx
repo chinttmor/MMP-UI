@@ -6,28 +6,12 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   QueryClient,
-  QueryClientProvider,
-  useQuery,
 } from '@tanstack/react-query';
 import AppWrappers from './AppWrappers';
-import { Session } from 'next-auth';
-import { getSession } from 'next-auth/react';
-import { layoutPropNames } from '@chakra-ui/system';
-import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
-import type { NextAuthOptions } from "next-auth"
 import { getServerSession } from "next-auth"
 import { options } from './api/auth/[...nextauth]/options';
 const queryClient = new QueryClient();
 const inter = Inter({ subsets: ['latin'] });
-
-// export async function getServerSideProps(ctx) {
-//   const session = await getSession(ctx)
-//   return ({props: {session}})
-// }
-
-// export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []) {
-//   return getServerSession(...args, options)
-// }
 
 export const metadata: Metadata = {
   title: 'Create Next App',

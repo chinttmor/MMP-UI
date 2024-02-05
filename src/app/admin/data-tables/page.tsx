@@ -3,7 +3,7 @@ import tableDataColumns from 'variables/data-tables/tableDataColumns';
 import ColumnsTable from 'components/admin/data-tables/ColumnsTable';
 import instance from 'config/axios.config';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { Children, useEffect } from 'react';
 import useApi from 'app/hooks/useApi';
 import Pagination from 'components/pagination/Pagination';
 // import { useGetPosts } from './api/user-1-10';
@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-query';
 import Button from 'components/button/button';
 import { toast } from 'react-toastify';
+import Form from 'components/admin/data-tables/Detail_Form';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const Tables = () => {
   const [currentLimit, setCurrentLimit] = React.useState(5);
   const [currentTableData, setCurrentTableData] = React.useState([]);
   const [pageNumbers, setPageNumbers] = React.useState([1])
+  const [formDisplay, setFormdisplay] =React.useState(false)
   function handleClick(page: number) {
     if(page===-1){
       const newPage = (parseInt(currentPage)-1)
@@ -60,11 +62,15 @@ const Tables = () => {
   }, [currentPage]);
 
   return (
-      <div className="mt-10" 
-      >
+      <div className="mt-10" >
+      <div id={formDisplay? 'overlay' : ''}
+      onClick = {()=>{setFormdisplay(false)}}
+      > 
+        <Form display={formDisplay} type={'create'}/>
+      </div>
       <div className="mb-3 mt-3 mr-3 grid justify-items-end">
         <button 
-        // onClick={}
+        onClick={()=>{setFormdisplay(true)}}
         className='min-w-[80px] min-h-[50px] p-3 rounded-md bg-brand-700'
         >Add new user</button>
       </div>

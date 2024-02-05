@@ -2,8 +2,6 @@
 import React, { useEffect } from 'react';
 import CardMenu from 'components/card/CardMenu';
 import Card from 'components/card';
-import Button from 'components/button/button';
-
 import {
   createColumnHelper,
   flexRender,
@@ -12,23 +10,26 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-
 import { Role } from 'constants/Enum/role.enum';
-import tableDataColumns from 'variables/data-tables/tableDataColumns';
 import Link from 'next/link';
 import ChangeDetail from 'components/icons/ChangeDetail';
 import Form from './Detail_Form';
+import DeleteIcon from 'components/icons/DeleteIcon';
+import Pop_Up from './Delete_Pop_Up';
 
 type RowObj = {
+  _id:string;
   email: string;
   name: string;
   phone: string;
   zone: Role;
 };
 
-function ColumnsTable(props: { tableData: any }) {
+function ColumnsTable(this: any, props: { tableData: any }) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [formDisplay, setFormdisplay] =React.useState(false)
+  const [popUpDisplay, setPopUpDisplay] =React.useState(false)
   let defaultData = tableData;
   const columns = [
     columnHelper.accessor('name', {
@@ -75,8 +76,20 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
+    columnHelper.accessor('_id', {
+      id: '_id',
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white"></p>
+      ),
+      cell: (info) => (
+        <p className="text-sm font-bold text-navy-700 dark:text-white">
+          {info.getValue()}
+        </p>
+      ),
+    }),
   ]; // eslint-disable-next-line
   const [data, setData] = React.useState(() => [...defaultData]);
+  const [dataID, setDataID] = React.useState<string>();
   useEffect(()=>{
     setData([...defaultData])
   },[defaultData])
@@ -93,7 +106,16 @@ function ColumnsTable(props: { tableData: any }) {
   });
   return (
     <div>
-      <Form/>
+       <div id={formDisplay? 'overlay' : ''}
+      onClick = {()=>{setFormdisplay(false)}}
+      > 
+        <Form display={formDisplay} type={'update'} userId={dataID}/>
+      </div>
+      <div id={popUpDisplay? 'overlay' : ''}
+      onClick = {()=>{setPopUpDisplay(false)}}
+      > 
+        <Pop_Up display={popUpDisplay} userId={dataID} setPopUpDisplay={setPopUpDisplay}/>
+      </div>
       <Card extra={'w-full pb-10 p-4 h-full'}>
         <header className="relative flex items-center justify-between">
           <div className="text-xl font-bold text-navy-700 ">
@@ -140,13 +162,43 @@ function ColumnsTable(props: { tableData: any }) {
                 .rows.slice(0, 10)
                 .map((row) => {
                   return (
-                    <tr
+                    <tr 
                       style={{
                         height: '70px',
                       }}
                       key={row.id}
                     >
                       {row.getVisibleCells().map((cell) => {
+                       if(cell.column.id==='_id'){
+                        const id: string = cell.getValue().toString()
+                            return (
+                              <>
+                              <td
+                              className='min-w-[30px] border-white/0 py-3 pr-4 text-brand-600 '
+                              > 
+                              <button
+                              onClick={()=>{
+                                setFormdisplay(true)
+                                setDataID(id)
+                                }} >
+                              <ChangeDetail/>
+                              </button>
+                              </td>
+                              <td
+                              className='min-w-[30px] border-white/0 py-3 pr-4 text-brand-600 '
+                              > 
+                              <button
+                              onClick={()=>{
+                                setPopUpDisplay(true)
+                                setDataID(id)
+                                }}
+                                 >
+                              <DeleteIcon/>
+                              </button>
+                              </td>
+                              </>
+                            )
+                         }else{
                         return (
                           <td
                             key={cell.id}
@@ -157,21 +209,9 @@ function ColumnsTable(props: { tableData: any }) {
                               cell.getContext(),
                             )}
                           </td>
-                        );
+                        );}
                       })}
-                      <td
-                      className='min-w-[70px] border-white/0 py-3 pr-4 text-brand-600 '
-                      > 
-                      <Link href={'/'} > View details</Link>
-                      </td>
-                      <td
-                      className='min-w-[30px] border-white/0 py-3 pr-4 text-brand-600 '
-                      > 
-                      <button >
-                      <ChangeDetail/>
-                      </button>
-                      
-                      </td>
+                     
                     </tr>
                   );
                 })}

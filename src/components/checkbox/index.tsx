@@ -1,6 +1,10 @@
+import { FieldValues, UseFormRegister } from 'react-hook-form';
+
 const Checkbox = (props: {
   id?: string;
   extra?: string;
+  name?: string;
+  register: UseFormRegister<FieldValues>;
   color?:
     | "red"
     | "blue"
@@ -18,7 +22,7 @@ const Checkbox = (props: {
     | "gray";
   [x: string]: any;
 }) => {
-  const { extra, color, id, ...rest } = props;
+  const { extra, color, name , register, id, ...rest } = props;
   return (
     <input
       id={id}
@@ -58,6 +62,9 @@ const Checkbox = (props: {
       } ${extra}`}
       name="weekly"
       {...rest}
+      // {...register(name, {
+      //   required: 'This field is required'
+      // })}
     />
   );
 };

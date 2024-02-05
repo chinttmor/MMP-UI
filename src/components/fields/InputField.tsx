@@ -9,8 +9,10 @@ function InputField(props: {
   variant?: string;
   state?: string;
   disabled?: boolean;
+  defaultValue?:string;
   type?: string;
   name: string;
+  require: boolean;
   register: UseFormRegister<FieldValues>;
   maxLength: number;
   minLength: number;
@@ -26,6 +28,8 @@ function InputField(props: {
     state,
     disabled,
     name,
+    defaultValue,
+    require,
     register,
     maxLength,
     minLength,
@@ -47,7 +51,8 @@ function InputField(props: {
         type={type}
         id={id}
         placeholder={placeholder}
-        className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none ${
+        defaultValue={defaultValue}
+        className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 outline-none ${
           disabled === true
             ? '!border-none !bg-gray-100 dark:!bg-white/5 dark:placeholder:!text-[rgba(255,255,255,0.15)]'
             : state === 'error'
@@ -57,7 +62,7 @@ function InputField(props: {
             : 'border-gray-200 dark:!border-white/10 dark:text-white'
         }`}
         {...register(name, {
-          required: 'This field is required',
+          required: require,
           maxLength: {
             value: maxLength,
             message: `Max length of this field is ${maxLength}`,
